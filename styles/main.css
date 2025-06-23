@@ -1,0 +1,422 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Minecraft', monospace, Arial, sans-serif;
+    background: #1a1a1a;
+    color: #ffffff;
+    overflow: hidden;
+    user-select: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Loading Screen */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2c5530, #1a3d1f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-content h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.loading-bar {
+    width: 300px;
+    height: 20px;
+    background: #333;
+    border: 2px solid #666;
+    margin: 0 auto 1rem;
+    position: relative;
+}
+
+.loading-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* Main Menu */
+#main-menu, #world-creation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2c5530, #1a3d1f);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-content {
+    text-align: center;
+    background: rgba(0,0,0,0.7);
+    padding: 3rem;
+    border-radius: 10px;
+    border: 2px solid #666;
+}
+
+.menu-content h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.menu-content h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.menu-buttons button {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.menu-buttons button:hover {
+    background: #45a049;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #666;
+    border-radius: 3px;
+    background: #333;
+    color: white;
+}
+
+/* Game Container */
+#game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* HUD */
+#hud {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+#crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+}
+
+#crosshair::before,
+#crosshair::after {
+    content: '';
+    position: absolute;
+    background: white;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+#crosshair::before {
+    top: 50%;
+    left: 8px;
+    width: 4px;
+    height: 2px;
+    transform: translateY(-50%);
+}
+
+#crosshair::after {
+    left: 50%;
+    top: 8px;
+    width: 2px;
+    height: 4px;
+    transform: translateX(-50%);
+}
+
+/* Health and Hunger */
+#health-bar, #hunger-bar {
+    position: absolute;
+    bottom: 60px;
+    display: flex;
+    gap: 2px;
+}
+
+#health-bar {
+    left: 20px;
+}
+
+#hunger-bar {
+    right: 20px;
+}
+
+.heart, .hunger-icon {
+    width: 18px;
+    height: 18px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.heart {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+}
+
+.hunger-icon {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="orange"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>');
+}
+
+/* Coordinates */
+#coordinates {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+}
+
+/* Hotbar */
+#hotbar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hotbar-slots {
+    display: flex;
+    gap: 2px;
+}
+
+.hotbar-slot {
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.7);
+    border: 2px solid #666;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.hotbar-slot.selected {
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+.hotbar-slot img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+}
+
+.hotbar-slot .count {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 10px;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+}
+
+/* Inventory */
+#inventory {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    pointer-events: all;
+}
+
+.inventory-content {
+    background: rgba(50,50,50,0.95);
+    border: 2px solid #666;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 40px);
+    grid-template-rows: repeat(4, 40px);
+    gap: 2px;
+}
+
+.inventory-slot {
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid #666;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.inventory-slot:hover {
+    border-color: #fff;
+}
+
+.inventory-slot img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+}
+
+.inventory-slot .count {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 10px;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+}
+
+/* Crafting Area */
+.crafting-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.crafting-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    gap: 2px;
+}
+
+.crafting-result {
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid #666;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Pause Menu */
+#pause-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-content h1 {
+        font-size: 2rem;
+    }
+    
+    .menu-buttons button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    #coordinates {
+        font-size: 12px;
+    }
+    
+    .hotbar-slot {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .hotbar-slot img {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* Utility Classes */
+.pixelated {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

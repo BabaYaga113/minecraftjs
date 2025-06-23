@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoxelCraftJS - Minecraft-Inspired Voxel Game</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loading-content">
+            <h1>VoxelCraftJS</h1>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p id="loading-text">Loading...</p>
+        </div>
+    </div>
+
+    <div id="main-menu" class="hidden">
+        <div class="menu-content">
+            <h1>VoxelCraftJS</h1>
+            <div class="menu-buttons">
+                <button id="new-world-btn">New World</button>
+                <button id="load-world-btn">Load World</button>
+                <button id="settings-btn">Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="world-creation" class="hidden">
+        <div class="menu-content">
+            <h2>Create New World</h2>
+            <div class="form-group">
+                <label for="world-name">World Name:</label>
+                <input type="text" id="world-name" placeholder="New World">
+            </div>
+            <div class="form-group">
+                <label for="world-seed">Seed (optional):</label>
+                <input type="text" id="world-seed" placeholder="Random">
+            </div>
+            <div class="form-group">
+                <label for="game-mode">Game Mode:</label>
+                <select id="game-mode">
+                    <option value="survival">Survival</option>
+                    <option value="creative">Creative</option>
+                    <option value="spectator">Spectator</option>
+                </select>
+            </div>
+            <div class="menu-buttons">
+                <button id="create-world-btn">Create World</button>
+                <button id="back-to-menu-btn">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-container" class="hidden">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- HUD Elements -->
+        <div id="hud">
+            <div id="crosshair"></div>
+            <div id="health-bar">
+                <div class="hearts" id="hearts"></div>
+            </div>
+            <div id="hunger-bar">
+                <div class="hunger" id="hunger"></div>
+            </div>
+            <div id="coordinates">
+                <span id="coords-text">X: 0, Y: 0, Z: 0</span>
+            </div>
+            <div id="hotbar">
+                <div class="hotbar-slots" id="hotbar-slots"></div>
+            </div>
+        </div>
+
+        <!-- Inventory -->
+        <div id="inventory" class="hidden">
+            <div class="inventory-content">
+                <div class="inventory-grid" id="inventory-grid"></div>
+                <div class="crafting-area">
+                    <div class="crafting-grid" id="crafting-grid"></div>
+                    <div class="crafting-result" id="crafting-result"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="hidden">
+            <div class="menu-content">
+                <h2>Game Paused</h2>
+                <div class="menu-buttons">
+                    <button id="resume-btn">Resume</button>
+                    <button id="save-world-btn">Save World</button>
+                    <button id="settings-pause-btn">Settings</button>
+                    <button id="quit-to-menu-btn">Quit to Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

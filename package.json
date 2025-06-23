@@ -1,0 +1,23 @@
+{
+  "name": "voxelcraftjs",
+  "version": "1.0.0",
+  "description": "A Minecraft-inspired voxel sandbox game in JavaScript",
+  "main": "index.html",
+  "scripts": {
+    "start": "python3 -m http.server 12000",
+    "dev": "python3 -m http.server 12000"
+  },
+  "keywords": [
+    "minecraft",
+    "voxel",
+    "game",
+    "javascript",
+    "threejs",
+    "sandbox"
+  ],
+  "author": "VoxelCraftJS Team",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.128.0"
+  }
+}
