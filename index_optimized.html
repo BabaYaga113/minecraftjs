@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoxelCraftJS - Optimized</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            user-select: none;
+        }
+        
+        #gameCanvas {
+            display: block;
+            cursor: none;
+        }
+        
+        #hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+        }
+        
+        #crosshair::before,
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.8);
+        }
+        
+        #crosshair::before {
+            top: 9px;
+            left: 7px;
+            width: 6px;
+            height: 2px;
+        }
+        
+        #crosshair::after {
+            top: 7px;
+            left: 9px;
+            width: 2px;
+            height: 6px;
+        }
+        
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        #hotbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2px;
+        }
+        
+        .hotbar-slot {
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #fff;
+        }
+        
+        .hotbar-slot.selected {
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 200;
+        }
+        
+        .menu-button {
+            padding: 15px 30px;
+            margin: 10px;
+            background: #4a4a4a;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            min-width: 200px;
+        }
+        
+        .menu-button:hover {
+            background: #666;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <div id="hud">
+        <div id="crosshair"></div>
+        <div id="info">
+            <div>FPS: <span id="fps">0</span></div>
+            <div>Pos: <span id="position">0, 0, 0</span></div>
+            <div>Chunks: <span id="chunks">0</span></div>
+            <div>Mode: <span id="mode">Creative</span></div>
+            <div>Controls: WASD + Mouse, Space/Shift, F=Fly, ESC=Menu</div>
+        </div>
+        
+        <div id="hotbar">
+            <div class="hotbar-slot selected">1</div>
+            <div class="hotbar-slot">2</div>
+            <div class="hotbar-slot">3</div>
+            <div class="hotbar-slot">4</div>
+            <div class="hotbar-slot">5</div>
+            <div class="hotbar-slot">6</div>
+            <div class="hotbar-slot">7</div>
+            <div class="hotbar-slot">8</div>
+            <div class="hotbar-slot">9</div>
+        </div>
+    </div>
+    
+    <div id="menu" class="hidden">
+        <h1>VoxelCraftJS</h1>
+        <button class="menu-button" onclick="resumeGame()">Resume Game</button>
+        <button class="menu-button" onclick="toggleMode()">Toggle Mode</button>
+        <button class="menu-button" onclick="newWorld()">New World</button>
+        <button class="menu-button" onclick="window.location.reload()">Restart</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="optimized_game.js"></script>
+</body>
+</html>

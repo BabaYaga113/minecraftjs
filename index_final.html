@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoxelCraftJS - High Performance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            user-select: none;
+        }
+        
+        #gameCanvas {
+            display: block;
+            cursor: none;
+        }
+        
+        #hud {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        #crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+        }
+        
+        #crosshair::before,
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 0 2px rgba(0,0,0,0.8);
+        }
+        
+        #crosshair::before {
+            top: 9px;
+            left: 6px;
+            width: 8px;
+            height: 2px;
+        }
+        
+        #crosshair::after {
+            top: 6px;
+            left: 9px;
+            width: 2px;
+            height: 8px;
+        }
+        
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.5;
+            border: 1px solid #333;
+            min-width: 200px;
+        }
+        
+        #hotbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2px;
+            background: rgba(0,0,0,0.5);
+            padding: 4px;
+            border-radius: 6px;
+        }
+        
+        .hotbar-slot {
+            width: 44px;
+            height: 44px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #fff;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .hotbar-slot.selected {
+            border-color: #fff;
+            box-shadow: 0 0 12px rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .hotbar-slot::after {
+            content: attr(data-key);
+            position: absolute;
+            bottom: -16px;
+            font-size: 10px;
+            color: #aaa;
+        }
+        
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 200;
+        }
+        
+        #menu h1 {
+            font-size: 48px;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            color: #4CAF50;
+        }
+        
+        .menu-button {
+            padding: 16px 32px;
+            margin: 8px;
+            background: #4a4a4a;
+            border: 2px solid #666;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            min-width: 220px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        
+        .menu-button:hover {
+            background: #666;
+            border-color: #888;
+            transform: translateY(-2px);
+        }
+        
+        .menu-button:active {
+            transform: translateY(0);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c5530, #1a3d1f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 300;
+        }
+        
+        #loading h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 8px;
+        }
+        
+        #instructions {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            line-height: 1.4;
+            border: 1px solid #333;
+            max-width: 250px;
+        }
+        
+        .key {
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <h1>VoxelCraftJS</h1>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+        <div id="loadingText">Initializing...</div>
+    </div>
+    
+    <canvas id="gameCanvas"></canvas>
+    
+    <div id="hud">
+        <div id="crosshair"></div>
+        
+        <div id="info">
+            <div><strong>FPS:</strong> <span id="fps">0</span></div>
+            <div><strong>Position:</strong> <span id="position">0, 0, 0</span></div>
+            <div><strong>Chunks:</strong> <span id="chunks">0</span></div>
+            <div><strong>Mode:</strong> <span id="mode">Creative</span></div>
+            <div><strong>Block:</strong> <span id="selectedBlock">Grass</span></div>
+        </div>
+        
+        <div id="hotbar">
+            <div class="hotbar-slot selected" data-key="1">🌱</div>
+            <div class="hotbar-slot" data-key="2">🟫</div>
+            <div class="hotbar-slot" data-key="3">🪨</div>
+            <div class="hotbar-slot" data-key="4">🪵</div>
+            <div class="hotbar-slot" data-key="5">🍃</div>
+            <div class="hotbar-slot" data-key="6">🏖️</div>
+            <div class="hotbar-slot" data-key="7">💧</div>
+            <div class="hotbar-slot" data-key="8">⛏️</div>
+            <div class="hotbar-slot" data-key="9">🔥</div>
+        </div>
+        
+        <div id="instructions">
+            <div><span class="key">WASD</span> Move</div>
+            <div><span class="key">Mouse</span> Look</div>
+            <div><span class="key">Space</span> Jump/Up</div>
+            <div><span class="key">Shift</span> Down</div>
+            <div><span class="key">F</span> Toggle Fly</div>
+            <div><span class="key">1-9</span> Select Block</div>
+            <div><span class="key">Left Click</span> Break</div>
+            <div><span class="key">Right Click</span> Place</div>
+            <div><span class="key">ESC</span> Menu</div>
+        </div>
+    </div>
+    
+    <div id="menu" class="hidden">
+        <h1>VoxelCraftJS</h1>
+        <button class="menu-button" onclick="resumeGame()">Resume Game</button>
+        <button class="menu-button" onclick="toggleMode()">Toggle Mode</button>
+        <button class="menu-button" onclick="newWorld()">Generate New World</button>
+        <button class="menu-button" onclick="toggleInstructions()">Toggle Instructions</button>
+        <button class="menu-button" onclick="window.location.reload()">Restart Game</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="optimized_game.js"></script>
+    <script src="asset_loader.js"></script>
+    <script>
+        // Enhanced initialization with loading screen
+        let game;
+        
+        async function initGame() {
+            const loadingProgress = document.getElementById('loadingProgress');
+            const loadingText = document.getElementById('loadingText');
+            
+            // Simulate loading steps
+            const steps = [
+                { text: 'Loading Three.js...', progress: 20 },
+                { text: 'Initializing renderer...', progress: 40 },
+                { text: 'Loading assets...', progress: 60 },
+                { text: 'Generating world...', progress: 80 },
+                { text: 'Ready!', progress: 100 }
+            ];
+            
+            for (const step of steps) {
+                loadingText.textContent = step.text;
+                loadingProgress.style.width = step.progress + '%';
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            // Initialize the game
+            game = new EnhancedVoxelGame();
+            await game.init();
+            
+            // Hide loading screen
+            document.getElementById('loading').classList.add('hidden');
+        }
+        
+        // Global functions for menu
+        function resumeGame() {
+            game.togglePause();
+        }
+        
+        function toggleMode() {
+            game.gameMode = game.gameMode === 'creative' ? 'survival' : 'creative';
+            if (game.gameMode === 'creative') {
+                game.player.isFlying = true;
+            }
+            game.togglePause();
+        }
+        
+        function newWorld() {
+            // Clear existing world
+            game.scene.children.forEach(child => {
+                if (child.type === 'Mesh' && child !== game.player.mesh) {
+                    game.scene.remove(child);
+                    if (child.geometry) child.geometry.dispose();
+                    if (child.material) child.material.dispose();
+                }
+            });
+            game.chunks.clear();
+            game.player.position.set(0, 50, 0);
+            game.generateInitialWorld();
+            game.togglePause();
+        }
+        
+        function toggleInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        // Start the game when page loads
+        window.addEventListener('load', initGame);
+        
+        // Handle page visibility for performance
+        document.addEventListener('visibilitychange', () => {
+            if (game && document.hidden) {
+                game.isPaused = true;
+            }
+        });
+    </script>
+</body>
+</html>

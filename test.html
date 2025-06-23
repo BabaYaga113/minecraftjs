@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoxelCraftJS Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+        }
+        #status {
+            padding: 10px;
+            background: #333;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        #canvas {
+            border: 1px solid #666;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="status">Loading VoxelCraftJS...</div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const status = document.getElementById('status');
+        
+        function updateStatus(message) {
+            status.textContent = message;
+            console.log(message);
+        }
+
+        try {
+            updateStatus('Three.js loaded successfully');
+            
+            // Test basic Three.js functionality
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, 800/600, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+            
+            updateStatus('Three.js renderer created');
+            
+            // Create a simple cube
+            const geometry = new THREE.BoxGeometry();
+            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            
+            camera.position.z = 5;
+            
+            updateStatus('Scene setup complete');
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            updateStatus('VoxelCraftJS test running - you should see a rotating green cube');
+            
+        } catch (error) {
+            updateStatus('Error: ' + error.message);
+            console.error(error);
+        }
+    </script>
+</body>
+</html>
